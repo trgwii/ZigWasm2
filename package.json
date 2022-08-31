@@ -5,7 +5,8 @@
   "main": "public/js/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "zig build && tsc"
+    "build": "zig build && tsc && npm run cpp-build",
+    "cpp-build": "zig build-lib --export=getControls --export=sizeOfControls --export=getScreen --export=sizeOfScreen --export=screenWidth --export=screenHeight --export=updateAndRender -dynamic -O ReleaseSafe -target wasm32-freestanding cpp/main.cpp -femit-bin=public/wasm/CWasm2.wasm"
   },
   "repository": {
     "type": "git",

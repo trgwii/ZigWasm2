@@ -8,6 +8,7 @@ pub const Controls = extern struct {
     left: KeyState = KeyState{},
     down: KeyState = KeyState{},
     right: KeyState = KeyState{},
+    space: KeyState = KeyState{},
     pub fn direction(self: Controls) @Vector(2, f32) {
         var dir = @Vector(2, f32){
             (@intToFloat(f32, @boolToInt(self.down.pressed)) -

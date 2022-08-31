@@ -79,9 +79,9 @@ export fn updateAndRender(delta: f32) void {
     game.pos = render.screenRect.subSquare(10).clamp(game.pos);
     for (game.enemies) |*enemy| {
         if (flip(enemy.*[0] - game.pos[0]) > flip(enemy.*[1] - game.pos[1])) {
-            enemy.*[0] += if (game.pos[0] < enemy.*[0]) -1 else 1;
+            enemy.*[0] += delta * game.speed * @as(f32, if (game.pos[0] < enemy.*[0]) -1 else 1);
         } else {
-            enemy.*[1] += if (game.pos[1] < enemy.*[1]) -1 else 1;
+            enemy.*[1] += delta * game.speed * @as(f32, if (game.pos[1] < enemy.*[1]) -1 else 1);
         }
     }
 
@@ -93,5 +93,5 @@ export fn updateAndRender(delta: f32) void {
         entity.color = 0xFFFF0000;
         entity.rect = Rect.create(game.enemies[i][1], game.enemies[i][0], 20, 20);
     }
-    render.render(entities[0..13]);
+    render.render(entities[0..12]);
 }

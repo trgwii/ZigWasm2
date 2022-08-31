@@ -51,7 +51,7 @@ pub fn render(rects: []const main.ColoredRect) void {
             var x: u32 = rx;
             while (x < xMax) : (x += 1) {
                 const i = stride + x;
-                std.debug.assert(i < screen.len);
+                if (i >= screen.len) break;
                 screen[i] = Pixel{ .pixel = rect.color };
             }
         }
