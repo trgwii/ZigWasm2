@@ -1,11 +1,17 @@
 // Imports
 // =======
 
-extern "C" void _print(const char *ptr, unsigned int len);
+#include <stdint.h>
+
+#define U32 uint32_t
+#define F32 float
+#define F64 double
+
+extern "C" void _print(const char *ptr, U32 len);
 
 // Helper
 void print(const char *str) {
-  unsigned int len = 0;
+  U32 len = 0;
   while (str[len])
     len++;
   _print(str, len);
@@ -29,28 +35,27 @@ struct Controls {
 } ctl;
 
 extern "C" void *getControls() { return &ctl; }
-extern "C" unsigned int sizeOfControls() { return sizeof(ctl); }
+extern "C" U32 sizeOfControls() { return sizeof(ctl); }
 
 // Screen
 #define Width 960
 #define Height 540
 
-unsigned int screen[Width * Height];
+U32 screen[Width * Height];
 
 extern "C" void *getScreen() { return &screen; }
-extern "C" unsigned int sizeOfScreen() { return sizeof(screen); }
-extern "C" unsigned int screenWidth() { return Width; }
-extern "C" unsigned int screenHeight() { return Height; }
+extern "C" U32 sizeOfScreen() { return sizeof(screen); }
+extern "C" U32 screenWidth() { return Width; }
+extern "C" U32 screenHeight() { return Height; }
 
 struct Game {
-  double x = 100;
-  double y = 100;
-  double speed = 200;
+  F32 x = 100;
+  F32 y = 100;
+  F32 speed = 200;
 } game;
 
 // "Main"
-extern "C" void updateAndRender(double delta) {
-  double speed = 200;
+extern "C" void updateAndRender(F64 delta) {
   // Handle input
   if (ctl.space.pressed)
     game.speed = 500;
@@ -74,13 +79,13 @@ extern "C" void updateAndRender(double delta) {
     game.x = Width - 10;
 
   // Render
-  for (unsigned int i = 0; i < sizeof(screen) / sizeof(screen[0]); i++) {
+  for (U32 i = 0; i < sizeof(screen) / sizeof(screen[0]); i++) {
     // 0xAABBGGRR
     screen[i] = 0xFF000044;
   }
-  for (unsigned int y = game.y; y < game.y + 10; y++) {
-    for (unsigned int x = game.x; x < game.x + 10; x++) {
-      unsigned int i = y * Width + x;
+  for (U32 y = game.y; y < game.y + 10; y++) {
+    for (U32 x = game.x; x < game.x + 10; x++) {
+      U32 i = y * Width + x;
       if (i >= sizeof(screen))
         break;
       screen[i] = 0xFFFFFFFF;
