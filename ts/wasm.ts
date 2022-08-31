@@ -4,6 +4,11 @@ const wasm = await WebAssembly.instantiateStreaming(response, {
   env: {
     __linear_memory: new WebAssembly.Memory({ initial: 0 }),
     __stack_pointer: new WebAssembly.Global({ value: "i32", mutable: true }),
+    _print: (ptr: number, len: number) => {
+      const arr = new Uint8ClampedArray(memory.buffer, ptr, len);
+      const str = new TextDecoder().decode(arr);
+      console.log(str);
+    },
   },
 });
 

@@ -35,40 +35,24 @@ export fn screenHeight() u32 {
 }
 
 const main = @import("main.zig");
+const std = @import("std");
 
-pub fn render() void {
-    // Background
-    if (width % 4 == 0) {
-        var y: u32 = 0;
-        while (y < height) : (y += 1) {
+pub fn render(rects: []const main.ColoredRect) void {
+    for (rects) |rect| {
+        const ry = @floatToInt(u32, rect.rect.v[0]);
+        const rx = @floatToInt(u32, rect.rect.v[1]);
+        const rh = @floatToInt(u32, rect.rect.v[2]);
+        const rw = @floatToInt(u32, rect.rect.v[3]);
+        const yMax = ry + rh;
+        const xMax = rx + rw;
+        var y: u32 = ry;
+        while (y < yMax) : (y += 1) {
             const stride = y * width;
-            var x: u32 = 0;
-            while (x < width) : (x += 4) {
-                screen[stride + x] = Pixel{ .pixel = 0xFF0000FF };
-                screen[stride + x + 1] = Pixel{ .pixel = 0xFF0000FF };
-                screen[stride + x + 2] = Pixel{ .pixel = 0xFF0000FF };
-                screen[stride + x + 3] = Pixel{ .pixel = 0xFF0000FF };
-            }
-        }
-    } else {
-        var y: u32 = 0;
-        while (y < height) : (y += 1) {
-            const stride = y * width;
-            var x: u32 = 0;
-            while (x < width) : (x += 1) {
-                screen[stride + x] = Pixel{ .pixel = 0xFF0000FF };
-            }
-        }
-    }
-    {
-        const game = main.game;
-        // Player
-        var y: u32 = @floatToInt(u32, game.pos[0]);
-        while (y < @floatToInt(u32, game.pos[0]) + 10) : (y += 1) {
-            const stride = y * width;
-            var x: u32 = @floatToInt(u32, game.pos[1]);
-            while (x < @floatToInt(u32, game.pos[1]) + 10) : (x += 1) {
-                screen[stride + x] = Pixel{ .pixel = 0xFFFFFFFF };
+            var x: u32 = rx;
+            while (x < xMax) : (x += 1) {
+                const i = stride + x;
+                std.debug.assert(i < screen.len);
+                screen[i] = Pixel{ .pixel = rect.color };
             }
         }
     }
